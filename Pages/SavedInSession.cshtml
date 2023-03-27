@@ -1,0 +1,11 @@
+﻿@page
+@model SavedInSessionModel
+@{
+    ViewData["Title"] = "Data in session";
+}
+@if (Model.FizzBuzz != null)
+{
+    <p>
+        @Model.FizzBuzz.Name urodził/a się w @Model.FizzBuzz.Number roku. @Model.otbet
+    </p>
+}

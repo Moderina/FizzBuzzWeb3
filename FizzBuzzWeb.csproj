@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Forms\Nowy folder1\**" />
+    <Compile Remove="Forms\Nowy folder\**" />
+    <Content Remove="Forms\Nowy folder1\**" />
+    <Content Remove="Forms\Nowy folder\**" />
+    <EmbeddedResource Remove="Forms\Nowy folder1\**" />
+    <EmbeddedResource Remove="Forms\Nowy folder\**" />
+    <None Remove="Forms\Nowy folder1\**" />
+    <None Remove="Forms\Nowy folder\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.json" Version="13.0.3" />
+  </ItemGroup>
+
+</Project>

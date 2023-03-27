@@ -1,0 +1,33 @@
+﻿@page
+@using FizzBuzzWeb.Forms;
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div class="text-center">
+    <h1 class="primary">Kalkulator lat przestępnych</h1>
+    <hr>
+    <span asp-validation-for="FizzBuzz.Number" style="color: red; font-weight:bold"></span><br>
+    <span asp-validation-for="FizzBuzz.Name" style="color: red; font-weight:bold"></span>
+    <div>
+        <form method="post">
+            <label asp-for="FizzBuzz.Name"></label><br>
+            <input asp-for="FizzBuzz.Name" id="nameText" /><br>
+            <label asp-for="FizzBuzz.Number"></label><br>
+            <input asp-for="FizzBuzz.Number" id="yearText" /><br>
+            <br>
+            <button type="submit" id="btn" class="btn btn-primary">Zatwierdź</button>
+        </form>
+    </div>
+    <br>
+    <div id="dane">
+        <p>shitting in pampers</p>
+        @if (ViewData.ContainsKey("FizzBuzz"))
+        {
+            var fizzbuzz = ViewData["FizzBuzz"] as FizzBuzzForm;
+            <p>@fizzbuzz.Name urodził/a się w @fizzbuzz.Number roku. @fizzbuzz.otbet</p>
+        }
+    </div>
+
+</div>
