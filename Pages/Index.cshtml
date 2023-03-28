@@ -25,8 +25,14 @@
         <p>shitting in pampers</p>
         @if (ViewData.ContainsKey("FizzBuzz"))
         {
-            var fizzbuzz = ViewData["FizzBuzz"] as FizzBuzzForm;
-            <p>@fizzbuzz.Name urodził/a się w @fizzbuzz.Number roku. @fizzbuzz.otbet</p>
+            var fizzbuzzlist = ViewData["FizzBuzz"] as FizzBuzzArray;
+            foreach (var FizzBuzz in fizzbuzzlist.fizzbuzzarray)
+            {
+                if (FizzBuzz.Name.Length < 100 && FizzBuzz.Number > 1899)
+                {
+                    <p> @FizzBuzz.Name urodził/a się w @FizzBuzz.Number roku. @FizzBuzz.otbet</p>
+                }
+            }
         }
     </div>
 

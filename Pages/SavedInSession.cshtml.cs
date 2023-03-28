@@ -11,16 +11,20 @@ namespace FizzBuzzWeb.Pages
     public class SavedInSessionModel : PageModel
     {
         public FizzBuzzForm? FizzBuzz { get; set; }
+        public List<FizzBuzzForm> FizzBuzzArray { get; set; }
         public string otbet { get; set; }  
 
         public void OnGet()
         {
             var Data = HttpContext.Session.GetString("Data");
             if (Data != null)
+            {
                 FizzBuzz = JsonConvert.DeserializeObject<FizzBuzzForm>(Data);
 
-            if (FizzBuzz.Number % 4 == 0) otbet = "To by³ rok przestêpny";
-            else otbet = "To nie by³ rok przestêpny";
+                if (FizzBuzz.Number % 4 == 0) otbet = "To by³ rok przestêpny";
+                else otbet = "To nie by³ rok przestêpny";
+            }
+
         }
     }
 }
