@@ -48,7 +48,6 @@ public class IndexModel : PageModel
         //    ViewData["Dane"] = html;
         //}
         //var Data = HttpContext.Session.GetString("Data");
-        //System.Diagnostics.Debug.WriteLine("dupa");
         //if (Data != null)
         //{
         //    System.Diagnostics.Debug.WriteLine(Data);
