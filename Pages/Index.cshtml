@@ -22,11 +22,10 @@
     </div>
     <br>
     <div id="dane">
-        <p>shitting in pampers</p>
         @if (ViewData.ContainsKey("FizzBuzz"))
         {
-            var fizzbuzzlist = ViewData["FizzBuzz"] as FizzBuzzArray;
-            foreach (var FizzBuzz in fizzbuzzlist.fizzbuzzarray)
+            var fizzbuzzlist = ViewData["FizzBuzz"] as List<FizzBuzzForm>;
+            foreach (var FizzBuzz in fizzbuzzlist)
             {
                 if (FizzBuzz.Name.Length < 100 && FizzBuzz.Number > 1899)
                 {
