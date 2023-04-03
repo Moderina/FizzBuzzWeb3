@@ -24,10 +24,10 @@
     <div id="dane">
         @if (ViewData.ContainsKey("FizzBuzz"))
         {
-            var fizzbuzzlist = ViewData["FizzBuzz"] as List<FizzBuzzForm>;
+            var fizzbuzzlist = ViewData["FizzBuzz"] as IList<FizzBuzzForm>;
             foreach (var FizzBuzz in fizzbuzzlist)
             {
-                if (FizzBuzz.Name.Length < 100 && FizzBuzz.Number > 1899)
+                
                 {
                     <p> @FizzBuzz.Name urodził/a się w @FizzBuzz.Number roku. @FizzBuzz.otbet</p>
                 }

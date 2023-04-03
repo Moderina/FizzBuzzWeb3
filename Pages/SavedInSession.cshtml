@@ -1,11 +1,23 @@
 ﻿@page
+@using FizzBuzzWeb.Forms;
 @model SavedInSessionModel
 @{
     ViewData["Title"] = "Data in session";
 }
-@if (Model.FizzBuzz != null)
-{
-    <p>
-        @Model.FizzBuzz.Name urodził/a się w @Model.FizzBuzz.Number roku. @Model.otbet
-    </p>
-}
+<div id="dane">
+    @if (ViewData.ContainsKey("FizzBuzz"))
+    {
+        var fizzbuzzlist = ViewData["FizzBuzz"] as List<FizzBuzzForm>;
+        foreach (var FizzBuzz in fizzbuzzlist)
+        {
+            if (FizzBuzz.Name.Length < 100 && FizzBuzz.Number > 1899)
+            {
+                <p> @FizzBuzz.Name urodził/a się w @FizzBuzz.Number roku. @FizzBuzz.otbet</p>
+            }
+        }
+    }
+</div>
+
+<form method="post">
+    <button type="submit" id="btn" class="btn btn-primary">Clear</button>
+</form>
