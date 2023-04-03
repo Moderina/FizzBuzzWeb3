@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 
 
 namespace FizzBuzzWeb.Pages;
@@ -10,12 +11,10 @@ namespace FizzBuzzWeb.Pages;
 public class IndexModel : PageModel
 {
     private readonly ILogger<IndexModel> _logger;
-    public FizzBuzzForm[] FizzBuzzArray;
+    public List<FizzBuzzForm> FizzBuzzArray = new List<FizzBuzzForm>();
     [BindProperty]
     public FizzBuzzForm FizzBuzz { get; set; }
     //[BindProperty(SupportsGet = true)]
-    //public string Name { get; set; }
-    //public string cobet { get; set; }
 
     public IndexModel(ILogger<IndexModel> logger)
     {
@@ -24,70 +23,54 @@ public class IndexModel : PageModel
 
     public void OnGet()
     {
-        //if (FizzBuzz != null)
+        //if (ViewData.ContainsKey("FizzBuzz"))
         //{
-        //    string html = $"<p>{FizzBuzz.Name} urodził/a się w {FizzBuzz.Number} roku. {FizzBuzz.otbet}</p>";
-        //    ViewData["Dane"] = html;
+        //    FizzBuzzArray = ViewData["FizzBuzz"] as List<FizzBuzzForm>;
+        //    foreach (var fizzbuzz in FizzBuzzArray)
+        //    {
+        //        System.Diagnostics.Debug.WriteLine(fizzbuzz.Number);
+        //    }
         //}
-        var Data = HttpContext.Session.GetString("Data");
-        System.Diagnostics.Debug.WriteLine("dupa");
+
+        var Data = HttpContext.Session.GetString("Array");
+        System.Diagnostics.Debug.WriteLine(Data);
         if (Data != null)
         {
-            System.Diagnostics.Debug.WriteLine(Data);
-            FizzBuzzArray = JsonConvert.DeserializeObject<FizzBuzzForm[]>(Data);
-
-            foreach (var FizzBuzz in FizzBuzzArray)
-            {
-
-                if (FizzBuzz.Number % 4 == 0) FizzBuzz.otbet = "To był rok przestępny";
-                else FizzBuzz.otbet = "To nie był rok przestępny";
-
-                //if (FizzBuzz.Number >= 1899 && FizzBuzz.Number <= 2024 && FizzBuzz.Name.Length <= 100)
-                //{
-                //    string html = $"<p>{FizzBuzz.Name} urodził/a się w {FizzBuzz.Number} roku. {FizzBuzz.otbet}</p>";
-                //    ViewData["Dane"] = html;
-                //}
-            }
-
-
+            FizzBuzzArray = JsonConvert.DeserializeObject<List<FizzBuzzForm>>(Data).ToList();
         }
-            
+        ViewData["FizzBuzz"] = FizzBuzzArray;
 
-        
+
     }
-
-    //public IActionResult OnConfirm(FizzBuzzForm FizzBuzz)
-    //{
-    //    // Save the form data to a session or database
-    //    string jsonData = JsonConvert.SerializeObject(FizzBuzz);
-    //    HttpContext.Session.SetString("Data", jsonData);
-    //    // Store the form data in the ViewData dictionary
-    //    ViewData["FormData"] = FizzBuzz;
-
-    //    // Return the same page
-    //    return Page();
-    //}
 
     public IActionResult OnPost()
     {
-        //if (!ModelState.IsValid)
-        //{
-        //    return Page();
-        //}
-        //FizzBuzzArray.Append(FizzBuzz);
-        //string jsonData = JsonConvert.SerializeObject(FizzBuzzArray);
-        //HttpContext.Session.SetString("Data", jsonData);
-        //return Page();
-        if (FizzBuzz.Number % 4 == 0) FizzBuzz.otbet = "To był rok przestępny";
-        else FizzBuzz.otbet = "To nie był rok przestępny";
 
-        ViewData["FizzBuzz"] = FizzBuzz;
+        //DESERIALIZACJA
+        var Data = HttpContext.Session.GetString("Array");
+        if (Data != null)
+        {
+            FizzBuzzArray = JsonConvert.DeserializeObject<List<FizzBuzzForm>>(Data).ToList();
+        }
+
+        //NOWE WPROWADZONE DANE
+        if (FizzBuzz.Name.Length < 100 && FizzBuzz.Number > 1898 && FizzBuzz.Number < 2025)
+        {
+            if (FizzBuzz.Number % 4 == 0) FizzBuzz.otbet = "To był rok przestępny";
+            else FizzBuzz.otbet = "To nie był rok przestępny";
+
+            //DODANIE NOWYCH DANYCH DO LISTY
+            FizzBuzzArray.Add(FizzBuzz);
+
+        }
+        ViewData["FizzBuzz"] = FizzBuzzArray;
+
+        //SERIALIZACJA NOWEJ UZUPELNIONEJ LISTY
+        string jsonData = JsonConvert.SerializeObject(FizzBuzzArray);
+        HttpContext.Session.SetString("Array", jsonData);
+
+
         return Page();
-
-
-        //return RedirectToPage("./SavedInSession");
-
-        //return Page();
 
     }
 
