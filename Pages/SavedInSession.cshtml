@@ -1,21 +1,56 @@
 ﻿@page
 @using FizzBuzzWeb.Forms;
+@using System.Security.Claims;
 @model SavedInSessionModel
-@{
-    ViewData["Title"] = "Data in session";
-}
+
+<div>
+    <form method="get">
+        <label for="searchTerm">Search:</label>
+        <input type="text" id="searchTerm" name="searchTerm">
+        <button type="submit">Search</button>
+    </form>
+</div>
+<br />
+<br />
 <div id="dane">
-    @if (ViewData.ContainsKey("FizzBuzz"))
+    @if (Model.Stolenpages.Items.Count == 0)
     {
-        var fizzbuzzlist = ViewData["FizzBuzz"] as List<FizzBuzzForm>;
-        foreach (var FizzBuzz in fizzbuzzlist)
+        <p>No results found.</p>
+    }
+    else
+    {
+        var sortedList = Model.Stolenpages.Items;
+        @foreach (var item in sortedList)
         {
-            if (FizzBuzz.Name.Length < 100 && FizzBuzz.Number > 1899)
+            <p>
+                @Html.DisplayFor(modelItem => item.Nick)
+                @Html.DisplayFor(modelItem => item.Year)
+            </p>
+            if (item.UserId == Model.User.FindFirstValue(ClaimTypes.NameIdentifier))
             {
-                <p> @FizzBuzz.Name urodził/a się w @FizzBuzz.Number roku. @FizzBuzz.otbet</p>
+                <form method="post">
+                    <button type="submit" id="btn" class="btn btn-primary">Delete</button>
+                </form>
             }
         }
     }
+    <nav>
+        <ul class="pagination">
+            <li class="page-item @(Model.Stolenpages.HasPreviousPage ? "" : "disabled")">
+                <a class="page-link" href="@Url.Page((Model.Stolenpages.PageIndex - 1).ToString())">Previous</a>
+            </li>
+            @for (int i = 1; i <= Model.Stolenpages.TotalPages; i++)
+            {
+                <li class="page-item @(i == Model.Stolenpages.PageIndex ? "active" : "")">
+                    <a class="page-link" asp-page="@Model.OnChange(@i)" asp-route-pageIndex=@i>@i</a>
+                </li>
+            }
+            <li class="page-item @(Model.Stolenpages.HasNextPage ? "" : "disabled")">
+                <a class="page-link" asp-page="@Model.OnChange()" asp-route-pageIndex=@(Model.Stolenpages.PageIndex + 1)>Next</a>
+            </li>
+        </ul>
+    </nav>
+
 </div>
 
 <form method="post">

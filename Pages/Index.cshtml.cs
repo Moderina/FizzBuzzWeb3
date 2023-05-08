@@ -4,73 +4,72 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using System.Collections.Generic;
-
+using Microsoft.EntityFrameworkCore;
+using System;
+using FizzBuzzWeb.Models;
+using FizzBuzzWeb.Data;
+using System.Security.Claims;
+using System.Collections;
+using System.Drawing.Printing;
 
 namespace FizzBuzzWeb.Pages;
 
 public class IndexModel : PageModel
 {
-    private readonly ILogger<IndexModel> _logger;
-    public List<FizzBuzzForm> FizzBuzzArray = new List<FizzBuzzForm>();
-    [BindProperty]
-    public FizzBuzzForm FizzBuzz { get; set; }
-    //[BindProperty(SupportsGet = true)]
 
-    public IndexModel(ILogger<IndexModel> logger)
+    [BindProperty]
+    public StolenData StolenData { get; set; }
+    public IList<StolenData> stolenDataList { get; set; }
+
+
+    private readonly ILogger<IndexModel> _logger;
+    private readonly DataContext _context;
+
+    public IndexModel(ILogger<IndexModel> logger, DataContext context)
     {
         _logger = logger;
+        _context = context;
     }
 
     public void OnGet()
     {
-        //if (ViewData.ContainsKey("FizzBuzz"))
+        var stolenDataList = _context.StolenData.ToList();
+
+        //var Data = HttpContext.Session.GetString("Array");
+        //System.Diagnostics.Debug.WriteLine(Data);
+        //if (Data != null)
         //{
-        //    FizzBuzzArray = ViewData["FizzBuzz"] as List<FizzBuzzForm>;
-        //    foreach (var fizzbuzz in FizzBuzzArray)
-        //    {
-        //        System.Diagnostics.Debug.WriteLine(fizzbuzz.Number);
-        //    }
+        //    FizzBuzzArray = JsonConvert.DeserializeObject<List<FizzBuzzForm>>(Data).ToList();
         //}
-
-        var Data = HttpContext.Session.GetString("Array");
-        System.Diagnostics.Debug.WriteLine(Data);
-        if (Data != null)
-        {
-            FizzBuzzArray = JsonConvert.DeserializeObject<List<FizzBuzzForm>>(Data).ToList();
-        }
-        ViewData["FizzBuzz"] = FizzBuzzArray;
-
+        //ViewData["FizzBuzz"] = FizzBuzzArray;
 
     }
 
     public IActionResult OnPost()
     {
-
-        //DESERIALIZACJA
-        var Data = HttpContext.Session.GetString("Array");
-        if (Data != null)
+        if (StolenData.Year < 1899 || StolenData.Year > 2023) return Page();
+        stolenDataList = _context.StolenData.ToList();
+        StolenData.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        StolenData.Time = DateTime.Now;
+        if (StolenData.Nick == null)
         {
-            FizzBuzzArray = JsonConvert.DeserializeObject<List<FizzBuzzForm>>(Data).ToList();
+            if (StolenData.UserId != null)
+            {
+                StolenData.Nick = User.FindFirstValue(ClaimTypes.Email);
+            }
+            else
+            {
+                StolenData.Nick = "No name";
+                StolenData.UserId = "NULL";
+            }
         }
-
-        //NOWE WPROWADZONE DANE
-        if (FizzBuzz.Name.Length < 100 && FizzBuzz.Number > 1898 && FizzBuzz.Number < 2025)
-        {
-            if (FizzBuzz.Number % 4 == 0) FizzBuzz.otbet = "To był rok przestępny";
-            else FizzBuzz.otbet = "To nie był rok przestępny";
-
-            //DODANIE NOWYCH DANYCH DO LISTY
-            FizzBuzzArray.Add(FizzBuzz);
-
-        }
-        ViewData["FizzBuzz"] = FizzBuzzArray;
-
-        //SERIALIZACJA NOWEJ UZUPELNIONEJ LISTY
-        string jsonData = JsonConvert.SerializeObject(FizzBuzzArray);
-        HttpContext.Session.SetString("Array", jsonData);
-
-
+        if (StolenData.Year % 4 == 0) StolenData.Wynik = "Przestępny";
+        else StolenData.Wynik = "Zwykły";
+        _context.StolenData.Add(StolenData);
+        _context.SaveChanges();
         return Page();
+        
+
 
     }
 

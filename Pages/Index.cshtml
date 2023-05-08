@@ -8,31 +8,28 @@
 <div class="text-center">
     <h1 class="primary">Kalkulator lat przestępnych</h1>
     <hr>
-    <span asp-validation-for="FizzBuzz.Number" style="color: red; font-weight:bold"></span><br>
-    <span asp-validation-for="FizzBuzz.Name" style="color: red; font-weight:bold"></span>
+    <span asp-validation-for="StolenData.Year" style="color: red; font-weight:bold"></span><br>
     <div>
         <form method="post">
-            <label asp-for="FizzBuzz.Name"></label><br>
-            <input asp-for="FizzBuzz.Name" id="nameText" /><br>
-            <label asp-for="FizzBuzz.Number"></label><br>
-            <input asp-for="FizzBuzz.Number" id="yearText" /><br>
-            <br>
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+            <label asp-for="StolenData.Nick"></label><br>
+            <input asp-for="StolenData.Nick" id="nameText" /><br>
+            <label asp-for="StolenData.Year"></label><br>
+            <input asp-for="StolenData.Year" id="yearText" /><br>
+            <br></div>
             <button type="submit" id="btn" class="btn btn-primary">Zatwierdź</button>
         </form>
     </div>
     <br>
     <div id="dane">
-        @if (ViewData.ContainsKey("FizzBuzz"))
+        @if (Model.StolenData != null)
         {
-            var fizzbuzzlist = ViewData["FizzBuzz"] as IList<FizzBuzzForm>;
-            foreach (var FizzBuzz in fizzbuzzlist)
-            {
-                
-                {
-                    <p> @FizzBuzz.Name urodził/a się w @FizzBuzz.Number roku. @FizzBuzz.otbet</p>
-                }
-            }
+            @Model.StolenData.Year
+            @Model.StolenData.Wynik
         }
+
+
     </div>
 
 </div>
