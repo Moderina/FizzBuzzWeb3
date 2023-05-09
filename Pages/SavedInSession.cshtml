@@ -36,11 +36,10 @@
             @if (item.UserId == Model.User.FindFirstValue(ClaimTypes.NameIdentifier))
             {
                 <td>
-
-                <form method="post">
-                    <input type="hidden" value="@item.Id" />
-                    <button type="submit" id="btn" value="@item.Id" class="btn btn-primary">Delete</button>
-                </form>
+                    <form method="post">
+                        <input type="hidden" name="remove" value="@item.Id" />
+                        <button type="submit" id="btn" class="btn btn-primary">Delete</button>
+                    </form>
                 </td>
             }
             </tr>
@@ -51,7 +50,7 @@
     <nav>
         <ul class="pagination">
             <li class="page-item @(Model.Stolenpages.HasPreviousPage ? "" : "disabled")">
-                <a class="page-link" asp-page="./SavedInSession" asp-route-pageIndex=@(Model.Stolenpages.PageIndex + 1)>Previous</a>
+                <a class="page-link" asp-page="./SavedInSession" asp-route-pageIndex=@(Model.Stolenpages.PageIndex - 1)>Previous</a>
             </li>
             @for (int i = 1; i <= Model.Stolenpages.TotalPages; i++)
             {

@@ -14,8 +14,8 @@ namespace FizzBuzzWeb.Pages
         [BindProperty(SupportsGet = true)]
         public string SearchTerm { get; set; }
 
-        [BindProperty]
-        public int id { get; set; }
+        //[BindProperty]
+        //public int id { get; set; }
 
         [BindProperty]
         public ForExtermination ForExtermination { get; set; }
@@ -45,11 +45,11 @@ namespace FizzBuzzWeb.Pages
             //return Page();
         }
 
-        public IActionResult OnPost()
+        public IActionResult OnPost(int id)
         {
             var query = _context.StolenData.AsQueryable();
-            var remove = query.Where(d => d.Id == id).ToList();
-            _context.StolenData.Remove(remove[0]);
+            var remove = query.Where(d => d.Id == id).FirstOrDefault();
+            _context.StolenData.Remove(remove);
             return Page();
         }
     }

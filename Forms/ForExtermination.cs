@@ -4,6 +4,6 @@ namespace FizzBuzzWeb.Forms
 {
     public class ForExtermination
     {
-        public StolenData StolenData { get; set; }
+        public int id { get; set; }
     }
 }
