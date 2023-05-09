@@ -14,14 +14,11 @@ namespace FizzBuzzWeb.Pages
         [BindProperty(SupportsGet = true)]
         public string SearchTerm { get; set; }
 
-        //[BindProperty]
-        //public int id { get; set; }
-
         [BindProperty]
         public ForExtermination ForExtermination { get; set; }
 
         public StolenData StolenData { get; set; }
-        public IList<StolenData> stolenDataList { get; set; }
+        //public IList<StolenData> stolenDataList { get; set; }
         public PaginatedList<StolenData> Stolenpages { get; set; }
         private readonly DataContext _context;
 
@@ -33,6 +30,7 @@ namespace FizzBuzzWeb.Pages
 
         public void OnGet(int pageIndex = 1)
         {
+
             var query = _context.StolenData.AsQueryable();
 
             if (!string.IsNullOrEmpty(SearchTerm))
@@ -41,15 +39,20 @@ namespace FizzBuzzWeb.Pages
             }
             query = query.OrderByDescending(x => x.Time);
             Stolenpages = PaginatedList<StolenData>.Create(query, pageIndex, 20);
-            stolenDataList = query.ToList();
+            //stolenDataList = query.ToList();
             //return Page();
         }
 
-        public IActionResult OnPost(int id)
+        public IActionResult OnPost(int remid, int pageIndex = 1)
         {
+            System.Diagnostics.Debug.WriteLine("AAAAAAAAAAAA" + remid);
             var query = _context.StolenData.AsQueryable();
-            var remove = query.Where(d => d.Id == id).FirstOrDefault();
+            var remove = query.Where(d => d.Id == remid).FirstOrDefault();
             _context.StolenData.Remove(remove);
+            _context.SaveChanges();
+            query = _context.StolenData.AsQueryable();
+            query = query.OrderByDescending(x => x.Time);
+            Stolenpages = PaginatedList<StolenData>.Create(query, pageIndex, 20);
             return Page();
         }
     }

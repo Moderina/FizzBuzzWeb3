@@ -53,6 +53,10 @@ public class IndexModel : PageModel
                 StolenData.UserId = "NULL";
             }
         }
+        else if (StolenData.UserId == null)
+        {
+            StolenData.UserId = "NULL";
+        }
         if (StolenData.Year % 4 == 0) StolenData.Wynik = "Przestępny";
         else StolenData.Wynik = "Zwykły";
         _context.StolenData.Add(StolenData);
