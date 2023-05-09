@@ -14,6 +14,12 @@ namespace FizzBuzzWeb.Pages
         [BindProperty(SupportsGet = true)]
         public string SearchTerm { get; set; }
 
+        [BindProperty]
+        public int id { get; set; }
+
+        [BindProperty]
+        public ForExtermination ForExtermination { get; set; }
+
         public StolenData StolenData { get; set; }
         public IList<StolenData> stolenDataList { get; set; }
         public PaginatedList<StolenData> Stolenpages { get; set; }
@@ -25,17 +31,6 @@ namespace FizzBuzzWeb.Pages
             _context = context;
         }
 
-        public async Task<IActionResult> OnChange(int pageIndex = 1)
-        {
-            IQueryable<StolenData> query = _context.StolenData;
-            query.OrderByDescending(x => x.Time);
-
-
-
-            Stolenpages = PaginatedList<StolenData>.Create(query, pageIndex, 20);
-            return Page();
-        }
-
         public void OnGet(int pageIndex = 1)
         {
             var query = _context.StolenData.AsQueryable();
@@ -44,7 +39,7 @@ namespace FizzBuzzWeb.Pages
             {
                 query = query.Where(d => d.Nick.Contains(SearchTerm) || d.Year.ToString().Contains(SearchTerm));
             }
-            query.OrderByDescending(x => x.Time);
+            query = query.OrderByDescending(x => x.Time);
             Stolenpages = PaginatedList<StolenData>.Create(query, pageIndex, 20);
             stolenDataList = query.ToList();
             //return Page();
@@ -52,11 +47,10 @@ namespace FizzBuzzWeb.Pages
 
         public IActionResult OnPost()
         {
-            //ViewData["FizzBuzz"] = null;
-            //FizzBuzzArray.Clear();
-            //string jsonData = JsonConvert.SerializeObject(FizzBuzzArray);
-            //HttpContext.Session.SetString("Array", jsonData);
-            return RedirectToPage("./Index");
+            var query = _context.StolenData.AsQueryable();
+            var remove = query.Where(d => d.Id == id).ToList();
+            _context.StolenData.Remove(remove[0]);
+            return Page();
         }
     }
 }

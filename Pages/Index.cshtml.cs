@@ -21,7 +21,6 @@ public class IndexModel : PageModel
     public StolenData StolenData { get; set; }
     public IList<StolenData> stolenDataList { get; set; }
 
-
     private readonly ILogger<IndexModel> _logger;
     private readonly DataContext _context;
 
@@ -34,15 +33,6 @@ public class IndexModel : PageModel
     public void OnGet()
     {
         var stolenDataList = _context.StolenData.ToList();
-
-        //var Data = HttpContext.Session.GetString("Array");
-        //System.Diagnostics.Debug.WriteLine(Data);
-        //if (Data != null)
-        //{
-        //    FizzBuzzArray = JsonConvert.DeserializeObject<List<FizzBuzzForm>>(Data).ToList();
-        //}
-        //ViewData["FizzBuzz"] = FizzBuzzArray;
-
     }
 
     public IActionResult OnPost()

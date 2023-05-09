@@ -20,39 +20,49 @@
     else
     {
         var sortedList = Model.Stolenpages.Items;
+        <table class="table">
         @foreach (var item in sortedList)
         {
-            <p>
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelitem => item.UserId)
+                </td>
+            <td>
                 @Html.DisplayFor(modelItem => item.Nick)
+            </td>
+            <td>
                 @Html.DisplayFor(modelItem => item.Year)
-            </p>
-            if (item.UserId == Model.User.FindFirstValue(ClaimTypes.NameIdentifier))
+            </td>
+            @if (item.UserId == Model.User.FindFirstValue(ClaimTypes.NameIdentifier))
             {
+                <td>
+
                 <form method="post">
-                    <button type="submit" id="btn" class="btn btn-primary">Delete</button>
+                    <input type="hidden" value="@item.Id" />
+                    <button type="submit" id="btn" value="@item.Id" class="btn btn-primary">Delete</button>
                 </form>
+                </td>
             }
+            </tr>
         }
+        </table>
+
     }
     <nav>
         <ul class="pagination">
             <li class="page-item @(Model.Stolenpages.HasPreviousPage ? "" : "disabled")">
-                <a class="page-link" href="@Url.Page((Model.Stolenpages.PageIndex - 1).ToString())">Previous</a>
+                <a class="page-link" asp-page="./SavedInSession" asp-route-pageIndex=@(Model.Stolenpages.PageIndex + 1)>Previous</a>
             </li>
             @for (int i = 1; i <= Model.Stolenpages.TotalPages; i++)
             {
                 <li class="page-item @(i == Model.Stolenpages.PageIndex ? "active" : "")">
-                    <a class="page-link" asp-page="@Model.OnChange(@i)" asp-route-pageIndex=@i>@i</a>
+                    <a class="page-link" asp-page="./SavedInSession" asp-route-pageIndex=@i>@i</a>
                 </li>
             }
             <li class="page-item @(Model.Stolenpages.HasNextPage ? "" : "disabled")">
-                <a class="page-link" asp-page="@Model.OnChange()" asp-route-pageIndex=@(Model.Stolenpages.PageIndex + 1)>Next</a>
+                <a class="page-link" asp-page="./SavedInSession" asp-route-pageIndex=@(Model.Stolenpages.PageIndex + 1)>Next</a>
             </li>
         </ul>
     </nav>
 
 </div>
-
-<form method="post">
-    <button type="submit" id="btn" class="btn btn-primary">Clear</button>
-</form>
