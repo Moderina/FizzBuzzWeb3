@@ -6,6 +6,8 @@ using Newtonsoft.Json;
 using FizzBuzzWeb.Models;
 using FizzBuzzWeb.Data;
 using System.Security.Claims;
+using System;
+using FizzBuzzWeb.Interfaces;
 
 namespace FizzBuzzWeb.Pages
 {
@@ -14,24 +16,25 @@ namespace FizzBuzzWeb.Pages
         [BindProperty(SupportsGet = true)]
         public string SearchTerm { get; set; }
 
-        [BindProperty]
-        public ForExtermination ForExtermination { get; set; }
+        //[BindProperty]
+        //public ForExtermination ForExtermination { get; set; }
 
-        public StolenData StolenData { get; set; }
-        //public IList<StolenData> stolenDataList { get; set; }
+        //public StolenData StolenData { get; set; }
         public PaginatedList<StolenData> Stolenpages { get; set; }
-        private readonly DataContext _context;
+        //private readonly DataContext _context;
+
+        private readonly IDataService _dataService;
 
 
-        public SavedInSessionModel(DataContext context)
+        public SavedInSessionModel(IDataService dataService)
         {
-            _context = context;
+            _dataService = dataService;
         }
 
         public void OnGet(int pageIndex = 1)
         {
 
-            var query = _context.StolenData.AsQueryable();
+            var query = _dataService.GetStolenData();
 
             if (!string.IsNullOrEmpty(SearchTerm))
             {
@@ -46,11 +49,10 @@ namespace FizzBuzzWeb.Pages
         public IActionResult OnPost(int remid, int pageIndex = 1)
         {
             System.Diagnostics.Debug.WriteLine("AAAAAAAAAAAA" + remid);
-            var query = _context.StolenData.AsQueryable();
+            var query = _dataService.GetStolenData();
             var remove = query.Where(d => d.Id == remid).FirstOrDefault();
-            _context.StolenData.Remove(remove);
-            _context.SaveChanges();
-            query = _context.StolenData.AsQueryable();
+            _dataService.DeleteStolenData(remove);
+            query = _dataService.GetStolenData();
             query = query.OrderByDescending(x => x.Time);
             Stolenpages = PaginatedList<StolenData>.Create(query, pageIndex, 20);
             return Page();

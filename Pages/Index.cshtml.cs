@@ -11,6 +11,7 @@ using FizzBuzzWeb.Data;
 using System.Security.Claims;
 using System.Collections;
 using System.Drawing.Printing;
+using FizzBuzzWeb.Interfaces;
 
 namespace FizzBuzzWeb.Pages;
 
@@ -19,26 +20,25 @@ public class IndexModel : PageModel
 
     [BindProperty]
     public StolenData StolenData { get; set; }
-    public IList<StolenData> stolenDataList { get; set; }
 
     private readonly ILogger<IndexModel> _logger;
-    private readonly DataContext _context;
 
-    public IndexModel(ILogger<IndexModel> logger, DataContext context)
+    private readonly IDataService _dataService;
+
+
+    public IndexModel(ILogger<IndexModel> logger, IDataService dataService)
     {
         _logger = logger;
-        _context = context;
+        _dataService = dataService;
     }
 
     public void OnGet()
     {
-        var stolenDataList = _context.StolenData.ToList();
     }
 
     public IActionResult OnPost()
     {
         if (StolenData.Year < 1899 || StolenData.Year > 2023) return Page();
-        stolenDataList = _context.StolenData.ToList();
         StolenData.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         StolenData.Time = DateTime.Now;
         if (StolenData.Nick == null)
@@ -59,8 +59,7 @@ public class IndexModel : PageModel
         }
         if (StolenData.Year % 4 == 0) StolenData.Wynik = "Przestępny";
         else StolenData.Wynik = "Zwykły";
-        _context.StolenData.Add(StolenData);
-        _context.SaveChanges();
+        _dataService.AddStolenData(StolenData);
         return Page();
         
 

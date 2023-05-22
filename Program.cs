@@ -1,4 +1,6 @@
 using FizzBuzzWeb.Data;
+using FizzBuzzWeb.Interfaces;
+using FizzBuzzWeb.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 
@@ -15,15 +17,7 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
 
 builder.Services.AddRazorPages();
 
-//builder.Services.AddMemoryCache();
-//builder.Services.AddDistributedMemoryCache();
-//builder.Services.AddSession(options =>
-//    {
-//        options.IdleTimeout = TimeSpan.FromSeconds(10);
-//        options.Cookie.HttpOnly = true;
-//        options.Cookie.IsEssential = true;
-
-//    });
+builder.Services.AddTransient<IDataService,DataService>();
 
 builder.Services.Configure<IdentityOptions>(options =>
 {
