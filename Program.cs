@@ -18,6 +18,7 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
 builder.Services.AddRazorPages();
 
 builder.Services.AddTransient<IDataService,DataService>();
+builder.Services.AddTransient<IRepository,Repository>();
 
 builder.Services.Configure<IdentityOptions>(options =>
 {

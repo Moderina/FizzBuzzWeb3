@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using FizzBuzzWeb.ViewModels;
+using FizzBuzzWeb.ViewModels.Person;
 using Microsoft.EntityFrameworkCore;
 
 namespace FizzBuzzWeb.Models
@@ -10,9 +12,9 @@ namespace FizzBuzzWeb.Models
     {
         public int PageIndex { get; private set; }
         public int TotalPages { get; private set; }
-        public List<T> Items { get; private set; }
+        public List<PersonForListVM> Items { get; private set; }
 
-        public PaginatedList(List<T> items, int count, int pageIndex, int pageSize)
+        public PaginatedList(List<PersonForListVM> items, int count, int pageIndex, int pageSize)
         {
             PageIndex = pageIndex;
             TotalPages = (int)Math.Ceiling(count / (double)pageSize);
@@ -26,9 +28,9 @@ namespace FizzBuzzWeb.Models
         public bool HasNextPage => PageIndex < TotalPages;
 
         public static PaginatedList<T> Create(
-            IQueryable<T> source, int pageIndex, int pageSize)
+            List<PersonForListVM> source, int pageIndex, int pageSize)
         {
-            var count = source.Count();
+            var count = source.Count;
             var items = source.Skip(
                 (pageIndex - 1) * pageSize)
                 .Take(pageSize).ToList();

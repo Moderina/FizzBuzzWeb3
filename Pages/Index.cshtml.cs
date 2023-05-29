@@ -32,9 +32,6 @@ public class IndexModel : PageModel
         _dataService = dataService;
     }
 
-    public void OnGet()
-    {
-    }
 
     public IActionResult OnPost()
     {
