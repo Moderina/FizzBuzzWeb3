@@ -3,6 +3,7 @@ using FizzBuzzWeb.Interfaces;
 using FizzBuzzWeb.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
+using FizzBuzzWeb.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +20,7 @@ builder.Services.AddRazorPages();
 
 builder.Services.AddTransient<IDataService,DataService>();
 builder.Services.AddTransient<IRepository,Repository>();
+builder.Services.AddTransient<IBrowserService,BrowserService>();
 
 builder.Services.Configure<IdentityOptions>(options =>
 {
@@ -31,6 +33,10 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
 });
 
+builder.Services.AddMvc(options =>
+{
+    options.Filters.Add(new CustomPageFilter(new BrowserService()));
+});
 
 var app = builder.Build();
 
